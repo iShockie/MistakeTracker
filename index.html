@@ -4,86 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mistake Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet"> <!-- Link to Google Fonts -->
     <style>
         body {
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
-            background-color: white; /* White background */
-            color: darkred; /* Dark red text color */
-            font-family: 'Roboto', sans-serif; /* Use Roboto font */
-            font-size: 24px; /* Font size */
-            font-weight: bold; /* Make text bold */
-            display: flex; /* Flexbox for centering */
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-            height: 100vh; /* Full height of the viewport */
-            width: 100vw; /* Full width of the viewport */
-            overflow: hidden; /* Hide overflow */
+            background-color: white; /* Set background color */
+            font-family: Arial, sans-serif; /* Change to your preferred font */
+            color: darkred; /* Text color */
+            padding: 0; /* Remove padding */
+            margin: 0; /* Remove margin */
+            width: 200px; /* Fixed width */
+            height: 100px; /* Fixed height */
+            overflow: hidden; /* Prevent overflow */
+        }
+        #data {
+            font-size: 32px; /* Double the size of 16px to 32px */
+            font-weight: bold; /* Make the font bold */
+            text-align: center; /* Center the text */
+            margin: 0; /* Remove margin */
+            padding: 0; /* Remove padding */
         }
     </style>
 </head>
 <body>
-    <div id="data">Loading...</div>
-
+    <div id="data">Loading...</div> <!-- This will be updated with fetched data -->
     <script>
         const sheetUrl = 'https://script.google.com/macros/s/AKfycbz5xuyg7PIZod7yqm0UX0fJkQqfsUzzt3f_YwcMJ8cX9ops2z_F0pMTidqgnZSc7ECnnw/exec'; // Replace with your web app URL
 
-        let currentAmount = 0; // Store the current amount
+        fetch(sheetUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data); // Log the entire data object to see its structure
+                let htmlContent = '';
 
-        // Initial fetch to load data
-        fetchData();
-
-        function fetchData() {
-            fetch(sheetUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.length > 0 && data[0].length > 0) {
-                        const newAmount = data[0][0]; // Access the new amount directly
-                        animateCount(newAmount); // Call the animation function
-                    } else {
-                        document.getElementById('data').innerHTML = `No data available`;
-                    }
-                })
-                .catch(error => {
-                    document.getElementById('data').innerHTML = 'Error loading data: ' + error.message;
-                });
-        }
-
-        function animateCount(target) {
-            const duration = 2000; // Duration for counting animation in milliseconds
-            const steps = 100; // Number of steps in the animation
-            const stepDuration = duration / steps; // Duration for each step
-
-            const stepValue = Math.ceil((target - currentAmount) / steps); // Calculate step value
-            let current = currentAmount; // Start from current amount
-            let count = 0; // Step counter
-
-            const countInterval = setInterval(() => {
-                count++;
-
-                current += stepValue; // Update the current amount
-
-                // Prevent overshooting
-                if (count === steps) {
-                    current = target;
-                    clearInterval(countInterval); // Stop the interval when done
+                // Assuming the first element in the data array contains the value
+                if (data.length > 0 && data[0].length > 0) {
+                    const amount = data[0][0]; // Access the amount directly
+                    htmlContent += `€${amount}`; // Add euro sign to the amount
+                } else {
+                    console.warn("No data available");
+                    htmlContent += `No data available`;
                 }
 
-                // Update display
-                document.getElementById('data').innerHTML = `${current} €`;
-            }, stepDuration);
-
-            currentAmount = target; // Update current amount
-        }
-
-        // Set an interval to fetch data every 5 seconds (5000 milliseconds)
-        setInterval(fetchData, 5000);
+                document.getElementById('data').innerHTML = htmlContent;
+            })
+            .catch(error => {
+                document.getElementById('data').innerHTML = 'Error loading data: ' + error.message;
+                console.error('Error fetching data:', error);
+            });
     </script>
 </body>
 </html>
