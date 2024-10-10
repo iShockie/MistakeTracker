@@ -11,17 +11,16 @@ fetch(sheetUrl)
         return response.json();
     })
     .then(data => {
-        let htmlContent = '<ul>';
+        let htmlContent = ''; // Start with an empty string
 
         // Check if data exists and is properly structured
         if (data.length > 0 && data[0].length > 0) {
             const amount = data[0][0]; // Access the amount directly
-            htmlContent += `<li>Amount: €${amount}</li>`; // Add euro sign to the amount
+            htmlContent += `${amount} €`; // Format as "4820 €"
         } else {
-            htmlContent += `<li>No data available</li>`;
+            htmlContent += `No data available`; // Display a message if no data is found
         }
 
-        htmlContent += '</ul>';
         document.getElementById('data').innerHTML = htmlContent; // Set innerHTML once
     })
     .catch(error => {
