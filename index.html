@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mistake Tracker</title>
     <style>
+        /* Reset CSS */
+        * {
+            box-sizing: border-box; /* Ensure padding and border are included in element's total width and height */
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5; /* Light grey background */
@@ -14,7 +18,7 @@
         }
         .container {
             background-color: white; /* White background for the widget */
-            padding: 20px; /* Padding inside the widget */
+            padding: 0; /* No padding inside the widget */
             border-radius: 10px; /* Rounded corners */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
             text-align: center; /* Center text inside the widget */
@@ -30,6 +34,7 @@
         #data {
             font-size: 24px; /* Larger font for the displayed amount */
             color: #4CAF50; /* Green color for the amount */
+            transition: opacity 0.5s; /* Smooth opacity transition */
         }
         /* Optional: Add a loading spinner or message styles */
         .loading {
@@ -46,6 +51,8 @@
     <script>
         const sheetUrl = 'https://script.google.com/macros/s/AKfycbz5xuyg7PIZod7yqm0UX0fJkQqfsUzzt3f_YwcMJ8cX9ops2z_F0pMTidqgnZSc7ECnnw/exec'; // Replace with your web app URL
 
+        let currentAmount = 0; // Store the current amount
+
         // Initial fetch to load data
         fetchData();
 
@@ -58,22 +65,46 @@
                     return response.json();
                 })
                 .then(data => {
-                    let htmlContent = ''; // Start with an empty string
-
                     // Check if data exists and is properly structured
                     if (data.length > 0 && data[0].length > 0) {
-                        const amount = data[0][0]; // Access the amount directly
-                        htmlContent += `${amount} €`; // Format as "4820 €"
+                        const newAmount = data[0][0]; // Access the new amount directly
+                        animateCount(newAmount); // Call the animation function
                     } else {
-                        htmlContent += `No data available`; // Display a message if no data is found
+                        document.getElementById('data').innerHTML = `No data available`; // Display a message if no data is found
                     }
-
-                    document.getElementById('data').innerHTML = htmlContent; // Update innerHTML with new data
                 })
                 .catch(error => {
                     document.getElementById('data').innerHTML = 'Error loading data: ' + error.message;
                     console.error('Error fetching data:', error);
                 });
+        }
+
+        function animateCount(target) {
+            const duration = 2000; // Duration for counting animation in milliseconds
+            const steps = 100; // Number of steps in the animation
+            const stepDuration = duration / steps; // Duration for each step
+
+            const stepValue = Math.ceil((target - currentAmount) / steps); // Calculate step value
+            let current = currentAmount; // Start from current amount
+            let count = 0; // Step counter
+
+            const countInterval = setInterval(() => {
+                count++;
+
+                // Update the current amount
+                current += stepValue;
+
+                // Prevent overshooting
+                if (count === steps) {
+                    current = target;
+                    clearInterval(countInterval); // Stop the interval when done
+                }
+
+                // Update display
+                document.getElementById('data').innerHTML = `${current} €`;
+            }, stepDuration);
+
+            currentAmount = target; // Update current amount
         }
 
         // Set an interval to fetch data every 5 seconds (5000 milliseconds)
