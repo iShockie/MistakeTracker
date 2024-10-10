@@ -9,12 +9,17 @@ fetch(sheetUrl)
     })
     .then(data => {
         console.log(data);  // Log the entire data object to see its structure
-        // Process the returned data
         let htmlContent = '<ul>';
-        data.forEach(row => {
-            console.log(row); // Log each row to see its contents
-            htmlContent += `<li>${row[0]}: ${row[1]}</li>`; // Adjust based on your data structure
-        });
+
+        // Assuming the first element in the data array contains the value
+        if (data.length > 0 && data[0].length > 0) {
+            const amount = data[0][0]; // Access the amount directly
+            htmlContent += `<li>Amount: €${amount}</li>`; // Add euro sign to the amount
+        } else {
+            console.warn("No data available");
+            htmlContent += `<li>No data available</li>`;
+        }
+
         htmlContent += '</ul>';
         document.getElementById('data').innerHTML = htmlContent;
     })
