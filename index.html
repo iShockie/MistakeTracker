@@ -20,7 +20,11 @@
             border-radius: 10px; /* Rounded corners */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
             text-align: center; /* Center text inside the widget */
-            width: 300px; /* Set a fixed width for the widget */
+            width: 423px; /* Set fixed width */
+            height: 189px; /* Set fixed height */
+            display: flex; /* Use flexbox to center content vertically */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
         }
         #data {
             font-size: 24px; /* Larger font for the displayed amount */
@@ -39,41 +43,40 @@
     </div>
 
     <script>
-const sheetUrl = 'https://script.google.com/macros/s/AKfycbz5xuyg7PIZod7yqm0UX0fJkQqfsUzzt3f_YwcMJ8cX9ops2z_F0pMTidqgnZSc7ECnnw/exec'; // Replace with your web app URL
+        const sheetUrl = 'https://script.google.com/macros/s/AKfycbz5xuyg7PIZod7yqm0UX0fJkQqfsUzzt3f_YwcMJ8cX9ops2z_F0pMTidqgnZSc7ECnnw/exec'; // Replace with your web app URL
 
-// Initial fetch to load data
-fetchData();
+        // Initial fetch to load data
+        fetchData();
 
-function fetchData() {
-    fetch(sheetUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok: ' + response.statusText);
-            }
-            return response.json();
-        })
-        .then(data => {
-            let htmlContent = ''; // Start with an empty string
+        function fetchData() {
+            fetch(sheetUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let htmlContent = ''; // Start with an empty string
 
-            // Check if data exists and is properly structured
-            if (data.length > 0 && data[0].length > 0) {
-                const amount = data[0][0]; // Access the amount directly
-                htmlContent += `${amount} €`; // Format as "4820 €"
-            } else {
-                htmlContent += `No data available`; // Display a message if no data is found
-            }
+                    // Check if data exists and is properly structured
+                    if (data.length > 0 && data[0].length > 0) {
+                        const amount = data[0][0]; // Access the amount directly
+                        htmlContent += `${amount} €`; // Format as "4820 €"
+                    } else {
+                        htmlContent += `No data available`; // Display a message if no data is found
+                    }
 
-            document.getElementById('data').innerHTML = htmlContent; // Update innerHTML with new data
-        })
-        .catch(error => {
-            document.getElementById('data').innerHTML = 'Error loading data: ' + error.message;
-            console.error('Error fetching data:', error);
-        });
-}
+                    document.getElementById('data').innerHTML = htmlContent; // Update innerHTML with new data
+                })
+                .catch(error => {
+                    document.getElementById('data').innerHTML = 'Error loading data: ' + error.message;
+                    console.error('Error fetching data:', error);
+                });
+        }
 
-// Set an interval to fetch data every 5 seconds (5000 milliseconds)
-setInterval(fetchData, 30000);
-
+        // Set an interval to fetch data every 5 seconds (5000 milliseconds)
+        setInterval(fetchData, 5000);
     </script>
 </body>
 </html>
