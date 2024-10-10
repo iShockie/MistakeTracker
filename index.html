@@ -7,12 +7,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh; /* Full viewport height */
             background-color: #f5f5f5; /* Light grey background */
             margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            overflow: hidden; /* Prevent scrollbars */
         }
         .container {
             background-color: white; /* White background for the widget */
@@ -22,6 +20,9 @@
             text-align: center; /* Center text inside the widget */
             width: 423px; /* Set fixed width */
             height: 189px; /* Set fixed height */
+            position: absolute; /* Position the container absolutely */
+            top: 0; /* Align to the top */
+            left: 0; /* Align to the left */
             display: flex; /* Use flexbox to center content vertically */
             justify-content: center; /* Center horizontally */
             align-items: center; /* Center vertically */
