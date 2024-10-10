@@ -6,51 +6,25 @@
     <title>Mistake Tracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet"> <!-- Link to Google Fonts -->
     <style>
-        /* Reset CSS */
-        * {
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
-            margin: 0; /* Remove default margin from all elements */
-            padding: 0; /* Remove default padding from all elements */
-        }
         body {
-            font-family: Arial, sans-serif; /* Fallback font */
-            background-color: #f5f5f5; /* Light grey background */
-            overflow: hidden; /* Prevent scrollbars and overflow */
-            height: 100vh; /* Use full viewport height */
-            width: 100vw; /* Use full viewport width */
-        }
-        .container {
-            background-color: white; /* White background color */
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-            text-align: center; /* Center text inside the widget */
-            width: 200px; /* Set fixed width */
-            height: 100px; /* Set fixed height */
-            position: absolute; /* Position the container absolutely */
-            top: 0; /* Align to the top */
-            left: 0; /* Align to the left */
-            display: flex; /* Use flexbox to center content vertically */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            background-color: white; /* White background */
+            color: darkred; /* Dark red text color */
+            font-family: 'Roboto', sans-serif; /* Use Roboto font */
+            font-size: 24px; /* Font size */
+            font-weight: bold; /* Make text bold */
+            display: flex; /* Flexbox for centering */
             justify-content: center; /* Center horizontally */
             align-items: center; /* Center vertically */
-        }
-        #data {
-            font-family: 'Roboto', sans-serif; /* Use Roboto font */
-            font-size: 20px; /* Adjust font size for the displayed amount */
-            font-weight: bold; /* Make the text bold */
-            color: darkred; /* Change text color to dark red for better contrast */
-            transition: opacity 0.5s; /* Smooth opacity transition */
-        }
-        /* Optional: Add a loading spinner or message styles */
-        .loading {
-            font-size: 14px; /* Smaller font for loading message */
-            color: #ccc; /* Light grey color for loading message */
+            height: 100vh; /* Full height of the viewport */
+            width: 100vw; /* Full width of the viewport */
+            overflow: hidden; /* Hide overflow */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div id="data" class="loading">Loading data...</div>
-    </div>
+    <div id="data">Loading...</div>
 
     <script>
         const sheetUrl = 'https://script.google.com/macros/s/AKfycbz5xuyg7PIZod7yqm0UX0fJkQqfsUzzt3f_YwcMJ8cX9ops2z_F0pMTidqgnZSc7ECnnw/exec'; // Replace with your web app URL
@@ -69,17 +43,15 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Check if data exists and is properly structured
                     if (data.length > 0 && data[0].length > 0) {
                         const newAmount = data[0][0]; // Access the new amount directly
                         animateCount(newAmount); // Call the animation function
                     } else {
-                        document.getElementById('data').innerHTML = `No data available`; // Display a message if no data is found
+                        document.getElementById('data').innerHTML = `No data available`;
                     }
                 })
                 .catch(error => {
                     document.getElementById('data').innerHTML = 'Error loading data: ' + error.message;
-                    console.error('Error fetching data:', error);
                 });
         }
 
@@ -95,8 +67,7 @@
             const countInterval = setInterval(() => {
                 count++;
 
-                // Update the current amount
-                current += stepValue;
+                current += stepValue; // Update the current amount
 
                 // Prevent overshooting
                 if (count === steps) {
