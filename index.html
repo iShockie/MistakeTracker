@@ -7,18 +7,19 @@
     <style>
         /* Reset CSS */
         * {
-            box-sizing: border-box; /* Ensure padding and border are included in element's total width and height */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            margin: 0; /* Remove default margin from all elements */
+            padding: 0; /* Remove default padding from all elements */
         }
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5; /* Light grey background */
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
-            overflow: hidden; /* Prevent scrollbars */
+            overflow: hidden; /* Prevent scrollbars and overflow */
+            height: 100vh; /* Use full viewport height */
+            width: 100vw; /* Use full viewport width */
         }
         .container {
             background-color: #4682B4; /* Satin blue background color */
-            padding: 0; /* No padding inside the widget */
             border-radius: 10px; /* Rounded corners */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
             text-align: center; /* Center text inside the widget */
