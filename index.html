@@ -53,7 +53,7 @@
         .flip-bottom {
             backface-visibility: hidden;
             transform-style: preserve-3d;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s ease; /* Increase duration for smoother transition */
         }
         .flip-up .flip-top {
             transform: rotateX(90deg);
@@ -73,32 +73,28 @@
 
     <script>
         const sheetUrl = 'https://script.google.com/macros/s/AKfycbz5xuyg7PIZod7yqm0UX0fJkQqfsUzzt3f_YwcMJ8cX9ops2z_F0pMTidqgnZSc7ECnnw/exec'; // Replace with your web app URL
-        let currentAmount = 0;
 
         function simulateFlip(newAmount) {
             const dataEl = document.querySelector('.flip');
             const top = dataEl.querySelector('.flip-top');
             const bottom = dataEl.querySelector('.flip-bottom');
 
-            // Briefly flip to a random number for effect, then show the newAmount
-            let fakeFlip = setTimeout(() => {
-                top.textContent = Math.floor(Math.random() * 10); // Random flip number
-                bottom.textContent = Math.floor(Math.random() * 10);
-                dataEl.classList.add('flip-up');
+            // Start the flip animation
+            dataEl.classList.add('flip-up');
 
+            // After the first flip, update the number
+            setTimeout(() => {
+                top.textContent = newAmount; // Set the new amount on the top
+                // This flip will hide the top and show the bottom
+                top.classList.remove('flip-top');
+                bottom.classList.add('flip-bottom');
+                bottom.textContent = newAmount; // Update the bottom number to the new amount
+
+                // Reset the classes to trigger the flip again
                 setTimeout(() => {
                     dataEl.classList.remove('flip-up');
-                    // Display the actual number after a brief delay
-                    top.textContent = newAmount;
-                    bottom.textContent = newAmount;
-                    dataEl.classList.add('flip-up');
-
-                    // Remove the flip-up class after the final transition
-                    setTimeout(() => {
-                        dataEl.classList.remove('flip-up');
-                    }, 300);
-                }, 300); // Delay before showing the actual number
-            }, 300); // Simulate the flip for a short period
+                }, 400); // Wait for the animation to finish
+            }, 400); // Delay before showing the actual number
         }
 
         function fetchData() {
