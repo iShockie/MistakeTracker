@@ -74,7 +74,12 @@
             const top = dataEl.querySelector('.flip-top');
             const bottom = dataEl.querySelector('.flip-bottom');
 
-            // Animate number up or down
+            // Determine the difference between current and new amount
+            const difference = Math.abs(newAmount - currentAmount);
+            const duration = 1000; // Total time for the animation (1 second)
+            const stepTime = duration / difference; // Time per step (to complete in 1 second)
+            const effectiveStepTime = Math.max(stepTime, 10); // Cap minimum step time to 10ms for smoother animation
+
             const updateAnimation = setInterval(() => {
                 if (currentAmount < newAmount) {
                     currentAmount++;
@@ -93,8 +98,8 @@
                 // Remove the class after the animation completes
                 setTimeout(() => {
                     dataEl.classList.remove('flip-up');
-                }, 500);
-            }, 50); // Adjust the speed of counting
+                }, 500); // Half second flip animation
+            }, effectiveStepTime); // Interval time per step (adjusted to make sure it completes within 1 second)
         }
 
         function fetchData() {
