@@ -6,19 +6,19 @@
     <title>Mistake Tracker</title>
     <style>
         body {
-            background-color: white; /* Set background color /
-            font-family: Arial, sans-serif; / Preferred font /
-            color: darkred; / Text color /
-            margin: 0; / Remove margin /
-            display: flex; / Use flexbox /
-            justify-content: center; / Center horizontally /
-            align-items: center; / Center vertically /
-            height: 100vh; / Set height to full viewport /
+            background-color: white; /* Set background color */
+            font-family: Arial, sans-serif; /* Preferred font */
+            color: darkred; /* Text color */
+            margin: 0; /* Remove margin */
+            display: flex; /* Use flexbox */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Set height to full viewport */
         }
         #data {
-            font-size: 32px; / Double the size of 16px to 32px /
-            font-weight: bold; / Make the font bold /
-            text-align: center; / Center the text */
+            font-size: 32px; /* Double the size of 16px to 32px */
+            font-weight: bold; /* Make the font bold */
+            text-align: center; /* Center the text */
         }
     </style>
 </head>
@@ -26,6 +26,7 @@
     <div id="data">Loading...</div> <!-- This will be updated with fetched data -->
     <script>
         const sheetUrl = 'https://script.google.com/macros/s/AKfycbz5xuyg7PIZod7yqm0UX0fJkQqfsUzzt3f_YwcMJ8cX9ops2z_F0pMTidqgnZSc7ECnnw/exec'; // Replace with your web app URL
+
         fetch(sheetUrl)
             .then(response => {
                 if (!response.ok) {
@@ -36,14 +37,16 @@
             .then(data => {
                 console.log(data); // Log the entire data object to see its structure
                 let htmlContent = '';
+
                 // Assuming the first element in the data array contains the value
                 if (data.length > 0 && data[0].length > 0) {
                     const amount = data[0][0]; // Access the amount directly
-                    htmlContent += €${amount}; // Add euro sign to the amount
+                    htmlContent += `€${amount}`; // Add euro sign to the amount
                 } else {
                     console.warn("No data available");
-                    htmlContent += No data available;
+                    htmlContent += `No data available`;
                 }
+
                 document.getElementById('data').innerHTML = htmlContent;
             })
             .catch(error => {
