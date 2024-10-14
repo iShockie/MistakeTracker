@@ -18,25 +18,29 @@
         #data {
             font-size: 48px;
             font-weight: bold;
-            text-align: center;
-            color: darkred; /* Corrected to dark red */
+            color: darkred;
+            display: flex;
+            justify-content: center;  /* Center horizontally */
+            align-items: center;      /* Center vertically */
             position: relative;
-            display: inline-block;
         }
         .flip {
             display: inline-block;
             perspective: 1000px;
+            position: relative;
+            width: 80px; /* Set fixed width */
+            height: 60px; /* Set fixed height */
         }
         .flip .flip-top,
         .flip .flip-bottom {
             display: block;
-            width: 100px;
-            height: 60px;
-            line-height: 60px;
+            width: 100%; /* Fill the full width of parent */
+            height: 100%; /* Fill the full height of parent */
+            line-height: 60px; /* Match height for vertical centering */
             font-size: 48px;
             font-weight: bold;
             background-color: #2b2628;
-            color: darkred; /* Corrected to dark red */
+            color: darkred;
             text-align: center;
             position: absolute;
             left: 0;
@@ -60,9 +64,11 @@
     </style>
 </head>
 <body>
-    <div id="data" class="flip">
-        <span class="flip-top">0</span>
-        <span class="flip-bottom">0</span>
+    <div id="data">
+        <div class="flip">
+            <span class="flip-top">0</span>
+            <span class="flip-bottom">0</span>
+        </div>
     </div>
 
     <script>
@@ -70,7 +76,7 @@
         let currentAmount = 0;
 
         function simulateFlip(newAmount) {
-            const dataEl = document.getElementById('data');
+            const dataEl = document.querySelector('.flip');
             const top = dataEl.querySelector('.flip-top');
             const bottom = dataEl.querySelector('.flip-bottom');
 
