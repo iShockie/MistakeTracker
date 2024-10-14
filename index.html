@@ -6,26 +6,96 @@
     <title>Mistake Tracker</title>
     <style>
         body {
-            background-color: #2b2628; /* Set background color */
-            font-family: Arial, sans-serif; /* Preferred font */
-            color: darkred; /* Text color */
-            margin: 0; /* Remove margin */
-            display: flex; /* Use flexbox */
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-            height: 100vh; /* Set height to full viewport */
+            background-color: #2b2628;
+            font-family: Arial, sans-serif;
+            color: darkred;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         #data {
-            font-size: 48px; /* Set font size */
-            font-weight: bold; /* Make the font bold */
-            text-align: center; /* Center the text */
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            color: white;
+        }
+        .flip {
+            display: inline-block;
+            perspective: 1000px;
+        }
+        .flip .flip-top,
+        .flip .flip-bottom {
+            display: block;
+            width: 80px;
+            height: 50px;
+            line-height: 50px;
+            font-size: 48px;
+            font-weight: bold;
+            background-color: #2b2628;
+            color: white;
+            text-align: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .flip .flip-bottom {
+            transform-origin: top;
+        }
+        .flip-top,
+        .flip-bottom {
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+        .flip-up .flip-top {
+            transform: rotateX(90deg);
+        }
+        .flip-up .flip-bottom {
+            transform: rotateX(0);
         }
     </style>
 </head>
 <body>
-    <div id="data">Loading...</div> <!-- This will be updated with fetched data -->
+    <div id="data" class="flip">
+        <span class="flip-top">0</span>
+        <span class="flip-bottom">0</span>
+    </div>
+
     <script>
         const sheetUrl = 'https://script.google.com/macros/s/AKfycbz5xuyg7PIZod7yqm0UX0fJkQqfsUzzt3f_YwcMJ8cX9ops2z_F0pMTidqgnZSc7ECnnw/exec'; // Replace with your web app URL
+        let currentAmount = 0;
+
+        function updateNumber(newAmount) {
+            const dataEl = document.getElementById('data');
+            const top = dataEl.querySelector('.flip-top');
+            const bottom = dataEl.querySelector('.flip-bottom');
+
+            // Animate number up or down
+            const updateAnimation = setInterval(() => {
+                if (currentAmount < newAmount) {
+                    currentAmount++;
+                } else if (currentAmount > newAmount) {
+                    currentAmount--;
+                } else {
+                    clearInterval(updateAnimation);
+                    return;
+                }
+
+                // Flip animation
+                top.textContent = currentAmount;
+                bottom.textContent = currentAmount;
+                dataEl.classList.add('flip-up');
+
+                // Remove the class after the animation completes
+                setTimeout(() => {
+                    dataEl.classList.remove('flip-up');
+                }, 500);
+            }, 50); // Adjust the speed of counting
+        }
 
         function fetchData() {
             fetch(sheetUrl)
@@ -36,22 +106,14 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data); // Log the entire data object to see its structure
-                    let htmlContent = '';
-
-                    // Assuming the first element in the data array contains the value
                     if (data.length > 0 && data[0].length > 0) {
-                        const amount = data[0][0]; // Access the amount directly
-                        htmlContent = `€${amount}`; // Add euro sign to the amount
+                        const amount = parseInt(data[0][0], 10); // Convert the amount to an integer
+                        updateNumber(amount); // Animate to the new amount
                     } else {
                         console.warn("No data available");
-                        htmlContent = `No data available`;
                     }
-
-                    document.getElementById('data').innerHTML = htmlContent;
                 })
                 .catch(error => {
-                    document.getElementById('data').innerHTML = 'Error loading data: ' + error.message;
                     console.error('Error fetching data:', error);
                 });
         }
