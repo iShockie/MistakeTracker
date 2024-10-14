@@ -73,28 +73,33 @@
 
     <script>
         const sheetUrl = 'https://script.google.com/macros/s/AKfycbz5xuyg7PIZod7yqm0UX0fJkQqfsUzzt3f_YwcMJ8cX9ops2z_F0pMTidqgnZSc7ECnnw/exec'; // Replace with your web app URL
+        let currentAmount = 0; // Track the current amount to avoid duplication
 
         function simulateFlip(newAmount) {
             const dataEl = document.querySelector('.flip');
             const top = dataEl.querySelector('.flip-top');
             const bottom = dataEl.querySelector('.flip-bottom');
 
-            // Start the flip animation
-            dataEl.classList.add('flip-up');
+            // Only flip if the new amount is different from the current amount
+            if (newAmount !== currentAmount) {
+                currentAmount = newAmount; // Update the current amount
+                top.textContent = currentAmount; // Set the new amount on the top
 
-            // After the first flip, update the number
-            setTimeout(() => {
-                top.textContent = newAmount; // Set the new amount on the top
-                // This flip will hide the top and show the bottom
-                top.classList.remove('flip-top');
-                bottom.classList.add('flip-bottom');
-                bottom.textContent = newAmount; // Update the bottom number to the new amount
+                // Start the flip animation
+                dataEl.classList.add('flip-up');
 
-                // Reset the classes to trigger the flip again
+                // After the first flip, update the number
                 setTimeout(() => {
-                    dataEl.classList.remove('flip-up');
-                }, 400); // Wait for the animation to finish
-            }, 400); // Delay before showing the actual number
+                    // Set the new amount on the bottom and clear the top
+                    bottom.textContent = currentAmount;
+                    top.textContent = ""; // Clear the top after flipping
+
+                    // Reset the classes to trigger the flip again
+                    setTimeout(() => {
+                        dataEl.classList.remove('flip-up');
+                    }, 400); // Wait for the animation to finish
+                }, 400); // Delay before showing the actual number
+            }
         }
 
         function fetchData() {
