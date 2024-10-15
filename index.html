@@ -83,15 +83,15 @@
             // Only flip if the new amount is different from the current amount
             if (newAmount !== currentAmount) {
                 currentAmount = newAmount; // Update the current amount
-                top.textContent = currentAmount; // Set the new amount on the top
+                top.textContent = currentAmount + '€'; // Set the new amount with "€" on the top
 
                 // Start the flip animation
                 dataEl.classList.add('flip-up');
 
                 // After the first flip, update the number
                 setTimeout(() => {
-                    // Set the new amount on the bottom and clear the top
-                    bottom.textContent = currentAmount;
+                    // Set the new amount with "€" on the bottom and clear the top
+                    bottom.textContent = currentAmount + '€';
                     top.textContent = ""; // Clear the top after flipping
 
                     // Reset the classes to trigger the flip again
