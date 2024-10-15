@@ -39,8 +39,8 @@
             const steps = 100; // Number of steps in the animation
             const stepDuration = duration / steps; // Duration for each step
 
-            const stepValue = Math.ceil((target - currentAmount) / steps); // Calculate step value
-            let current = currentAmount; // Start from current amount
+            const stepValue = (target - currentAmount) / steps; // Calculate step value
+            let current = currentAmount; // Start from the current amount (last displayed value)
             let count = 0; // Step counter
 
             const countInterval = setInterval(() => {
@@ -56,8 +56,11 @@
                 }
 
                 // Update display
-                document.getElementById('data').innerHTML = `${current} €`;
+                document.getElementById('data').innerHTML = `${Math.round(current)} €`; // Round to avoid decimals
             }, stepDuration);
+
+            // Update the stored current amount after the animation completes
+            currentAmount = target;
         }
 
         // Function to fetch data from Google Sheets
@@ -72,7 +75,9 @@
                 .then(data => {
                     if (data.length > 0 && data[0].length > 0) {
                         const amount = parseInt(data[0][0], 10); // Convert the amount to an integer
-                        animateCount(amount); // Animate the counting to the new amount
+                        if (amount !== currentAmount) { // Only animate if there's a change in the value
+                            animateCount(amount); // Animate the counting to the new amount
+                        }
                     } else {
                         console.warn("No data available");
                     }
