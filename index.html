@@ -34,9 +34,6 @@
             color: grey;
             text-align: left;
             width: 80px; /* Fixed width for label alignment */
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
         .value {
             font-size: 42px;
@@ -46,6 +43,10 @@
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+        .decimal {
+            font-size: 20px; /* Smaller font size for decimals */
+            vertical-align: super; /* Align decimals slightly above the main text */
         }
     </style>
 </head>
@@ -80,7 +81,8 @@
                     clearInterval(interval);
                 }
 
-                element.textContent = `${current.toFixed(2)}€`;
+                const [integerPart, decimalPart] = current.toFixed(2).split('.');
+                element.innerHTML = `${integerPart}<span class="decimal">.${decimalPart}</span>€`;
             }, stepDuration);
         }
 
