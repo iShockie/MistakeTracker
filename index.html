@@ -65,27 +65,32 @@
 
         // Function to fetch data from Google Sheets
         function fetchData() {
-            fetch(sheetUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.length > 0 && data[0].length > 0) {
-                        const amount = parseInt(data[0][0], 10); // Convert the amount to an integer
-                        if (amount !== currentAmount) { // Only animate if there's a change in the value
-                            animateCount(amount); // Animate the counting to the new amount
-                        }
-                    } else {
-                        console.warn("No data available");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
-        }
+  const apiUrl = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL'; // Replace with your deployed URL
+
+  fetch(apiUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Example JSON response: { "RSA": 500, "MEDICAL": 300, "HOME": 700 }
+      if (data.RSA !== amounts.RSA) {
+        amounts.RSA = data.RSA;
+        animateCount('rsaValue', amounts.RSA);
+      }
+      if (data.MEDICAL !== amounts.MEDICAL) {
+        amounts.MEDICAL = data.MEDICAL;
+        animateCount('medicalValue', amounts.MEDICAL);
+      }
+      if (data.HOME !== amounts.HOME) {
+        amounts.HOME = data.HOME;
+        animateCount('homeValue', amounts.HOME);
+      }
+    })
+    .catch(error => console.error('Error fetching data:', error));
+}
 
         // Fetch data initially when page loads
         fetchData();
