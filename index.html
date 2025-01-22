@@ -16,19 +16,37 @@
             height: 100vh;
         }
         #data {
-            font-size: 32px;
-            font-weight: bold;
-            color: darkred;
             text-align: center;
             line-height: 1.5;
+        }
+        .tracker {
+            margin: 10px 0;
+        }
+        .label {
+            font-size: 20px;
+            font-weight: bold;
+            display: block;
+        }
+        .value {
+            font-size: 36px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div id="data">
-        <div id="rsaValue">RSA: 0</div>
-        <div id="medicalValue">MEDICAL: 0</div>
-        <div id="homeValue">HOME: 0</div>
+        <div class="tracker">
+            <span class="label">RSA:</span>
+            <span id="rsaValue" class="value">0</span>
+        </div>
+        <div class="tracker">
+            <span class="label">MED:</span>
+            <span id="medicalValue" class="value">0</span>
+        </div>
+        <div class="tracker">
+            <span class="label">HOME:</span>
+            <span id="homeValue" class="value">0</span>
+        </div>
     </div>
 
     <script>
@@ -41,7 +59,7 @@
             const duration = 2000;
             const steps = 100;
             const stepDuration = duration / steps;
-            const currentValue = parseInt(element.textContent.split(": ")[1], 10);
+            const currentValue = parseInt(element.textContent, 10);
             const stepValue = (targetValue - currentValue) / steps;
             let current = currentValue;
             let count = 0;
@@ -55,7 +73,7 @@
                     clearInterval(interval);
                 }
 
-                element.textContent = `${elementId.toUpperCase()}: ${Math.round(current)}`;
+                element.textContent = Math.round(current);
             }, stepDuration);
         }
 
