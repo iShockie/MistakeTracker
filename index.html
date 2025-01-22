@@ -25,18 +25,18 @@
         .entry {
             display: flex;
             justify-content: flex-start;
-            align-items: center; /* Ensure alignment in the center */
-            margin-bottom: 10px; /* Space between rows */
+            align-items: center;
+            margin-bottom: 10px;
         }
         .label {
             font-size: 18px;
-            line-height: 1; /* Matches number alignment */
+            line-height: 1;
             margin-right: 5px;
             color: #FFD700;
         }
         .value {
             font-size: 32px;
-            line-height: 1; /* Matches label alignment */
+            line-height: 1;
         }
     </style>
 </head>
@@ -57,7 +57,7 @@
             const duration = 2000;
             const steps = 100;
             const stepDuration = duration / steps;
-            const currentValue = parseInt(element.textContent, 10);
+            const currentValue = parseInt(element.textContent.replace('€', ''), 10) || 0;
             const stepValue = (targetValue - currentValue) / steps;
             let current = currentValue;
             let count = 0;
@@ -71,7 +71,7 @@
                     clearInterval(interval);
                 }
 
-                element.textContent = Math.round(current);
+                element.textContent = `${Math.round(current)}€`;
             }, stepDuration);
         }
 
