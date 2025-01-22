@@ -16,38 +16,31 @@
             height: 100vh;
         }
         #data {
+            font-size: 32px;
+            font-weight: bold;
+            color: darkred;
             text-align: center;
             line-height: 1.5;
         }
-        .tracker {
-            margin: 10px 0;
+        .entry {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
         }
         .label {
-            font-size: 20px;
-            font-weight: bold;
-            display: block;
+            font-size: 18px;
+            margin-right: 5px;
         }
         .value {
-            font-size: 36px;
-            font-weight: bold;
-            margin-top: 5px;
+            font-size: 32px;
         }
     </style>
 </head>
 <body>
     <div id="data">
-        <div class="tracker">
-            <span class="label">RSA:</span>
-            <span id="rsaValue" class="value">0</span>
-        </div>
-        <div class="tracker">
-            <span class="label">MED:</span>
-            <span id="medicalValue" class="value">0</span>
-        </div>
-        <div class="tracker">
-            <span class="label">HOME:</span>
-            <span id="homeValue" class="value">0</span>
-        </div>
+        <div class="entry"><span class="label">RSA:</span><span id="rsaValue" class="value">0</span></div>
+        <div class="entry"><span class="label">MED:</span><span id="medicalValue" class="value">0</span></div>
+        <div class="entry"><span class="label">HOME:</span><span id="homeValue" class="value">0</span></div>
     </div>
 
     <script>
