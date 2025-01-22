@@ -16,86 +16,77 @@
             height: 100vh;
         }
         #data {
-            font-size: 48px;
+            font-size: 32px;
             font-weight: bold;
             color: darkred;
-            display: flex;
-            justify-content: center;  /* Center horizontally */
-            align-items: center;      /* Center vertically */
-            position: relative;
+            text-align: center;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
-    <div id="data">0 €</div>
+    <div id="data">
+        <div id="rsaValue">RSA: 0</div>
+        <div id="medicalValue">MEDICAL: 0</div>
+        <div id="homeValue">HOME: 0</div>
+    </div>
 
     <script>
-        const sheetUrl = 'https://script.google.com/macros/s/AKfycbz3J41CLecDqt2uRpjAlCvLifSSLxEzNMY5C6ym2BKw9EFb51w3i88LWdDypxlt2Ku_0Q/exec'; // Replace with your web app URL
-        let currentAmount = 0; // Track the current amount
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbz3J41CLecDqt2uRpjAlCvLifSSLxEzNMY5C6ym2BKw9EFb51w3i88LWdDypxlt2Ku_0Q/exec'; // Replace with your web app URL
+        const amounts = { RSA: 0, MEDICAL: 0, HOME: 0 };
 
-        // Function to animate counting from the current amount to the target amount
-        function animateCount(target) {
-            const duration = 2000; // Duration for counting animation in milliseconds
-            const steps = 100; // Number of steps in the animation
-            const stepDuration = duration / steps; // Duration for each step
+        // Function to animate counting
+        function animateCount(elementId, targetValue) {
+            const element = document.getElementById(elementId);
+            const duration = 2000;
+            const steps = 100;
+            const stepDuration = duration / steps;
+            const currentValue = parseInt(element.textContent.split(": ")[1], 10);
+            const stepValue = (targetValue - currentValue) / steps;
+            let current = currentValue;
+            let count = 0;
 
-            const stepValue = (target - currentAmount) / steps; // Calculate step value
-            let current = currentAmount; // Start from the current amount (last displayed value)
-            let count = 0; // Step counter
-
-            const countInterval = setInterval(() => {
+            const interval = setInterval(() => {
                 count++;
-
-                // Update the current amount
                 current += stepValue;
 
-                // Prevent overshooting
                 if (count === steps) {
-                    current = target;
-                    clearInterval(countInterval); // Stop the interval when done
+                    current = targetValue;
+                    clearInterval(interval);
                 }
 
-                // Update display
-                document.getElementById('data').innerHTML = `${Math.round(current)} €`; // Round to avoid decimals
+                element.textContent = `${elementId.toUpperCase()}: ${Math.round(current)}`;
             }, stepDuration);
-
-            // Update the stored current amount after the animation completes
-            currentAmount = target;
         }
 
-        // Function to fetch data from Google Sheets
+        // Function to fetch data and update values
         function fetchData() {
-  const apiUrl = 'https://script.google.com/macros/s/AKfycbz3J41CLecDqt2uRpjAlCvLifSSLxEzNMY5C6ym2BKw9EFb51w3i88LWdDypxlt2Ku_0Q/exec'; // Replace with your deployed URL
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.RSA !== amounts.RSA) {
+                        amounts.RSA = data.RSA;
+                        animateCount('rsaValue', amounts.RSA);
+                    }
+                    if (data.MEDICAL !== amounts.MEDICAL) {
+                        amounts.MEDICAL = data.MEDICAL;
+                        animateCount('medicalValue', amounts.MEDICAL);
+                    }
+                    if (data.HOME !== amounts.HOME) {
+                        amounts.HOME = data.HOME;
+                        animateCount('homeValue', amounts.HOME);
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
 
-  fetch(apiUrl)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok: ' + response.statusText);
-      }
-      return response.json();
-    })
-    .then(data => {
-      // Example JSON response: { "RSA": 500, "MEDICAL": 300, "HOME": 700 }
-      if (data.RSA !== amounts.RSA) {
-        amounts.RSA = data.RSA;
-        animateCount('rsaValue', amounts.RSA);
-      }
-      if (data.MEDICAL !== amounts.MEDICAL) {
-        amounts.MEDICAL = data.MEDICAL;
-        animateCount('medicalValue', amounts.MEDICAL);
-      }
-      if (data.HOME !== amounts.HOME) {
-        amounts.HOME = data.HOME;
-        animateCount('homeValue', amounts.HOME);
-      }
-    })
-    .catch(error => console.error('Error fetching data:', error));
-}
-
-        // Fetch data initially when page loads
+        // Fetch data on page load and update every 30 seconds
         fetchData();
-
-        // Fetch and update data every 30 seconds (30000 milliseconds)
         setInterval(fetchData, 30000);
     </script>
 </body>
