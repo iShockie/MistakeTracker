@@ -11,6 +11,7 @@
             color: darkred;
             margin: 0;
             display: flex;
+            flex-direction: column; /* So we can stack elements vertically */
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -23,47 +24,61 @@
             justify-content: center;  /* Center horizontally */
             align-items: center;      /* Center vertically */
             position: relative;
+            margin-bottom: 20px;      /* Add some space above the iframe */
         }
     </style>
 </head>
 <body>
+    <!-- Display an initial value or text -->
     <div id="data">0 €</div>
+    
+    <!-- Embed the SharePoint/Excel iframe directly below -->
+    <iframe 
+        id="excelEmbed"
+        width="200" 
+        height="100" 
+        frameborder="0" 
+        scrolling="no"
+        src="https://eaholding.sharepoint.com/sites/EASlovenia-ALL-ITdepartment/_layouts/15/Doc.aspx?sourcedoc={fd288d74-34f8-4333-a44e-f6f90784c10e}&action=embedview&wdAllowInteractivity=False&ActiveCell='Sheet1'!D2&Item='Sheet1'!D2&wdHideGridlines=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True">
+    </iframe>
+    <script>
+  // Reload the iframe every 30 seconds
+  setInterval(() => {
+    const iframe = document.getElementById('excelEmbed');
+    iframe.src = iframe.src; // Reassign the same src to trigger reload
+  }, 5000);
+</script>
 
+    <!-- 
+    If you no longer need the Google Sheets data or animation,
+    you can remove the entire <script> section below.
+    
+    This is your original Google Sheets fetch/animate code,
+    commented out for reference:
+    
     <script>
         const sheetUrl = 'https://script.google.com/macros/s/AKfycbz5xuyg7PIZod7yqm0UX0fJkQqfsUzzt3f_YwcMJ8cX9ops2z_F0pMTidqgnZSc7ECnnw/exec'; // Replace with your web app URL
         let currentAmount = 0; // Track the current amount
 
-        // Function to animate counting from the current amount to the target amount
         function animateCount(target) {
-            const duration = 2000; // Duration for counting animation in milliseconds
-            const steps = 100; // Number of steps in the animation
-            const stepDuration = duration / steps; // Duration for each step
-
-            const stepValue = (target - currentAmount) / steps; // Calculate step value
-            let current = currentAmount; // Start from the current amount (last displayed value)
-            let count = 0; // Step counter
-
+            const duration = 2000; 
+            const steps = 100; 
+            const stepDuration = duration / steps; 
+            const stepValue = (target - currentAmount) / steps; 
+            let current = currentAmount; 
+            let count = 0; 
             const countInterval = setInterval(() => {
                 count++;
-
-                // Update the current amount
                 current += stepValue;
-
-                // Prevent overshooting
                 if (count === steps) {
                     current = target;
-                    clearInterval(countInterval); // Stop the interval when done
+                    clearInterval(countInterval);
                 }
-
-                // Update display
-                document.getElementById('data').innerHTML = `${Math.round(current)} €`; // Round to avoid decimals
+                document.getElementById('data').innerHTML = Math.round(current) + ' €';
             }, stepDuration);
-
-            // Update the stored current amount after the animation completes
             currentAmount = target;
         }
 
-        // Function to fetch data from Google Sheets
         function fetchData() {
             fetch(sheetUrl)
                 .then(response => {
@@ -74,9 +89,9 @@
                 })
                 .then(data => {
                     if (data.length > 0 && data[0].length > 0) {
-                        const amount = parseInt(data[0][0], 10); // Convert the amount to an integer
-                        if (amount !== currentAmount) { // Only animate if there's a change in the value
-                            animateCount(amount); // Animate the counting to the new amount
+                        const amount = parseInt(data[0][0], 10); 
+                        if (amount !== currentAmount) {
+                            animateCount(amount);
                         }
                     } else {
                         console.warn("No data available");
@@ -90,8 +105,10 @@
         // Fetch data initially when page loads
         fetchData();
 
-        // Fetch and update data every 30 seconds (30000 milliseconds)
+        // Fetch data every 30 seconds
         setInterval(fetchData, 30000);
     </script>
+    -->
+
 </body>
 </html>
