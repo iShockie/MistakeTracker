@@ -32,12 +32,11 @@
             font-size: 18px;
             line-height: 1;
             margin-right: 5px;
-            color: gray;
+            color: #FFD700;
         }
         .value {
-            font-size: 40px;
+            font-size: 32px;
             line-height: 1;
-            font-weight: bold;
         }
     </style>
 </head>
@@ -58,7 +57,7 @@
             const duration = 2000;
             const steps = 100;
             const stepDuration = duration / steps;
-            const currentValue = parseInt(element.textContent.replace('€', ''), 10) || 0;
+            const currentValue = parseFloat(element.textContent.replace('€', '')) || 0;
             const stepValue = (targetValue - currentValue) / steps;
             let current = currentValue;
             let count = 0;
@@ -72,7 +71,7 @@
                     clearInterval(interval);
                 }
 
-                element.textContent = `${Math.round(current)}€`;
+                element.textContent = `${current.toFixed(2)}€`;
             }, stepDuration);
         }
 
