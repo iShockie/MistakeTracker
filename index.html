@@ -48,6 +48,9 @@
             font-size: 20px; /* Smaller font size for decimals */
             vertical-align: super; /* Align decimals slightly above the main text */
         }
+        .currency {
+            margin-left: 5px; /* Add space between decimals and currency symbol */
+        }
     </style>
 </head>
 <body>
@@ -82,7 +85,7 @@
                 }
 
                 const [integerPart, decimalPart] = current.toFixed(2).split('.');
-                element.innerHTML = `${integerPart}<span class="decimal">.${decimalPart}</span>€`;
+                element.innerHTML = `${integerPart}<span class="decimal">.${decimalPart}</span><span class="currency">€</span>`;
             }, stepDuration);
         }
 
